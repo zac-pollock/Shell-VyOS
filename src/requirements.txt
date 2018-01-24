@@ -1,0 +1,6 @@
+cloudshell-shell-core>=2.4.0
+cloudshell-networking>=4.0.0,<4.1.0
+cloudshell-networking-devices>=2.2,<2.3
+cloudshell-snmp
+cloudshell_automation_api
+cloudshell-cli

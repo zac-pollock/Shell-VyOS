@@ -1,0 +1,229 @@
+<Driver Description="Describe the purpose of your CloudShell shell" MainClass="driver.VyosDriver" Name="VyosDriver" Version="1.0.0">
+    <Layout>
+        <Category Name="Hidden Commands">
+            <Command Name="shutdown" DisplayName="Shutdown" Tags="" Description="Sends a graceful shutdown to the device"/>
+            <Command Name="run_custom_config_command" DisplayName="Send Custom Config Command" Tags="">
+                <Parameters>
+                    <Parameter Name="custom_command" Type="String" Mandatory = "True" DisplayName="Command" DefaultValue=""
+                               Description="The command to run. Note that commands that require a response are not supported."/>
+                </Parameters>
+            </Command>
+            <Command Name="ApplyConnectivityChanges" DisplayName="ApplyConnectivityChanges" Tags="allow_unreserved">
+                <Parameters>
+                    <Parameter Name="request" Type="String" Mandatory = "True" DefaultValue="" Description=""/>
+                </Parameters>
+            </Command>
+            <Command Name="orchestration_save" >
+                <Parameters>
+                    <Parameter Name="mode" Type="Lookup" Mandatory = "True" AllowedValues="shallow,deep"  DefaultValue="shallow"
+                               Description="Snapshot save mode, can be one of two values 'shallow' (default) or 'deep'"/>
+                    <Parameter Name="custom_params" Type="String" Mandatory = "False"  DefaultValue=""
+                               Description=" Set of custom parameters for the save operation"/>
+
+                </Parameters>
+            </Command>
+            <Command Name="orchestration_restore" >
+                <Parameters>
+                    <Parameter Name="saved_details" Type="String" Mandatory = "True" DefaultValue=""
+                               Description="A JSON string representing the state to restore including saved artifacts and info"/>
+                    <Parameter Name="custom_params" Type="String" Mandatory = "False"  DefaultValue=""
+                               Description=" Set of custom parameters for the restore operation"/>
+
+                </Parameters>
+            </Command>
+            <Command Name="health_check"  Tags="" Description="Checks if the device is up and connectable"/>
+        </Category>
+
+
+        <Category Name="Set Info">
+            <Command Name="run_custom_command" DisplayName="Send Custom Command" Tags="" Description="Executes a custom command on the device">
+                <Parameters>
+                    <Parameter Name="custom_command" Type="String" Mandatory = "True" DisplayName="Command" DefaultValue=""
+                               Description="The command to run. Note that commands that require a response are not supported."/>
+                    <Parameter Name="enable_config" Type="Lookup" AllowedValues="True,False" Mandatory = "True" DisplayName="Config Mode Required" DefaultValue="False"
+                               Description="Select to determine whether or not the custom command requires config mode."/>
+                    <Parameter Name="enable_commit" Type="Lookup" AllowedValues="True,False" Mandatory = "True" DisplayName="Save And Commit" DefaultValue="False"
+                               Description="Select to determine whether or not to save and commit a command.  Note - Only applicable in config mode."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_hostname" DisplayName="Set Device Hostname" Tags="" Description="Set the hostname of the device">
+                <Parameters>
+                    <Parameter Name="hostname" Type="String" Mandatory = "True" DisplayName="Hostname" DefaultValue=""
+                               Description="The hostname to set on the device."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_domain_name" DisplayName="Set Domain Name" Tags="" Description="Set the domain name">
+                <Parameters>
+                    <Parameter Name="domain_name" Type="String" Mandatory = "True" DisplayName="Domain Name" DefaultValue=""
+                               Description="The domain name to set on the device."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_ntp_server" DisplayName="Set NTP Server" Tags="" Description="Set the NTP server">
+                <Parameters>
+                    <Parameter Name="ntp_server" Type="String" Mandatory = "True" DisplayName="NTP Server" DefaultValue=""
+                               Description="The NTP server to set on the device."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_timezone" DisplayName="Set Timezone" Tags="" Description="Set the timezone of the device">
+                <Parameters>
+                    <Parameter Name="timezone" Type="String" Mandatory = "True" DisplayName="Timezone" DefaultValue=""
+                               Description="The timezone to set on the device."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_static_ip" DisplayName="Set Static IP" Tags="" Description="Set the IP address of an adapter">
+                <Parameters>
+                    <Parameter Name="eth_adpt" Type="Lookup" AllowedValues="lo,eth0,eth1,eth2,eth3,eth4,eth5,eth6,eth7,eth8,eth9" Mandatory = "True" DisplayName="Ethernet Adapter" DefaultValue="eth1"
+                               Description="The ethernet adapter to set on the IP on."/>
+                    <Parameter Name="ip_address" Type="String" Mandatory = "True" DisplayName="IP Address" DefaultValue=""
+                               Description="The IP address to set on the adapter."/>
+                    <Parameter Name="subnet_mask" Type="Lookup" AllowedValues="/16,/17,/18,/19,/20,/21,/22,/23,/24,/25,/26,/27,/28,/29,/30" Mandatory = "True" DisplayName="Subnet Mask" DefaultValue="/24"
+                               Description="The subnet mask to be used."/>
+                </Parameters>
+            </Command>
+            <Command Name="create_vlan" DisplayName="Create VLAN" Tags="" Description="Create a new VLAN">
+                <Parameters>
+                    <Parameter Name="eth_adpt" Type="Lookup" AllowedValues="lo,eth0,eth1,eth2,eth3,eth4,eth5,eth6,eth7,eth8,eth9" Mandatory = "True" DisplayName="Ethernet Adapter" DefaultValue="eth1"
+                               Description="The ethernet adapter to set on the IP on."/>
+                    <Parameter Name="vlan_id" Type="String" Mandatory = "True" DisplayName="VLAN ID" DefaultValue=""
+                               Description="The ID of the VLAN."/>
+                    <Parameter Name="ip_address" Type="String" Mandatory = "True" DisplayName="IP Address" DefaultValue=""
+                               Description="The IP address and network prefix for this VIF."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_multihop" DisplayName="Set BGP Multihop" Tags="" Description="Allow eBGP neighbors not on directly connected networks">
+                <Parameters>
+                    <Parameter Name="local_asn" Type="String" Mandatory = "True" DisplayName="Local ASN" DefaultValue=""
+                               Description="The ASN that the local router is located in."/>
+                    <Parameter Name="neighbor_ip" Type="String" Mandatory = "True" DisplayName="Neighbor IP Address" DefaultValue=""
+                               Description="The IP address of the neighboring router."/>
+                    <Parameter Name="max_hops" Type="String" Mandatory = "True" DisplayName="Maximum Hops" DefaultValue="10"
+                               Description="The maximum number of hops (TTL) allowed.  (Range is 1 - 255, Default is 10)"/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_remote" DisplayName="Set BGP Remote" Tags="" Description="Specify the ASN of the neighbor">
+                <Parameters>
+                    <Parameter Name="local_asn" Type="String" Mandatory = "True" DisplayName="Local ASN" DefaultValue=""
+                               Description="The ASN that the local router is located in."/>
+                    <Parameter Name="neighbor_asn" Type="String" Mandatory = "True" DisplayName="Neighboring ASN" DefaultValue=""
+                               Description="The ASN that the neighboring router is located in."/>
+                    <Parameter Name="neighbor_ip" Type="String" Mandatory = "True" DisplayName="Neighbor IP Address" DefaultValue=""
+                               Description="The IP address of the neighboring router."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_interface" DisplayName="Set BGP Interface" Tags="" Description="Allows the router to use a specific interface for TCP connections">
+                <Parameters>
+                    <Parameter Name="local_asn" Type="String" Mandatory = "True" DisplayName="Local ASN" DefaultValue=""
+                               Description="The ASN that the local router is located in."/>
+                    <Parameter Name="neighbor_ip" Type="String" Mandatory = "True" DisplayName="Neighbor IP Address" DefaultValue=""
+                               Description="The IP address of the neighboring router."/>
+                    <Parameter Name="eth_adpt" Type="Lookup" AllowedValues="lo,eth0,eth1,eth2,eth3,eth4" Mandatory = "True" DisplayName="Ethernet Adapter" DefaultValue="eth1"
+                               Description="The ethernet adapter to view VLAN info for."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_network" DisplayName="Set BGP Network" Tags="" Description="Specifies a network to be advertised by the BGP routing process">
+                <Parameters>
+                    <Parameter Name="local_asn" Type="String" Mandatory = "True" DisplayName="Local ASN" DefaultValue=""
+                               Description="The ASN that the local router is located in."/>
+                    <Parameter Name="local_network" Type="String" Mandatory = "True" DisplayName="Local Network" DefaultValue=""
+                               Description="The IP address and mask of the network that the local router is in. (Ex. 1.0.0.0/16)"/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_router_id" DisplayName="Set BGP Router ID" Tags="" Description="Sets a fixed BGP router ID for the router">
+                <Parameters>
+                    <Parameter Name="local_asn" Type="String" Mandatory = "True" DisplayName="Local ASN" DefaultValue=""
+                               Description="The ASN that the local router is located in."/>
+                    <Parameter Name="router_id" Type="String" Mandatory = "True" DisplayName="Router ID" DefaultValue=""
+                               Description="The ID to assign to the local router."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_bgp_redistribute_ospf" DisplayName="Redistribute BGP OSPF Routes" Tags="" Description="Redistributes routes learned from OSPF into BGP.">
+                <Parameters>
+                    <Parameter Name="route_map" Type="String" Mandatory = "True" DisplayName="Route Map" DefaultValue=""
+                               Description="The route map to redistribute."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_ospf_enable" DisplayName="Enable OSPF" Tags="" Description="Enables OSPF routing protocol on the router">
+            </Command>
+            <Command Name="set_ospf_network_address" DisplayName="Set OSPF Network Address" Tags="" Description="Specifies a network address for an OSPF area">
+                <Parameters>
+                    <Parameter Name="ospf_id" Type="String" Mandatory = "True" DisplayName="OSPF ID" DefaultValue=""
+                               Description="The ID of the OSPF being configured."/>
+                    <Parameter Name="ip_address" Type="String" Mandatory = "True" DisplayName="IP Address" DefaultValue=""
+                               Description="The network to be used for the OSPF area."/>
+                </Parameters>
+            </Command>
+            <Command Name="set_ospf_redistribute_bgp" DisplayName="Redistribute OSPF BGP Routes" Tags="" Description="Sets the parameters for redistribution of BGP routes into OSPF">
+                <Parameters>
+                    <Parameter Name="route_map" Type="String" Mandatory = "True" DisplayName="Route Map" DefaultValue=""
+                               Description="The route map to redistribute."/>
+                </Parameters>
+            </Command>
+        </Category>
+
+
+        <Category Name="Get Info">
+            <Command Name="show_system_info" DisplayName="Show System Info" Tags="" Description="Show the system info">
+            </Command>
+            <Command Name="show_interfaces_basic" DisplayName="Show Interfaces (Basic Mode)" Tags="" Description="Show the ethernet interfaces in basic mode">
+            </Command>
+            <Command Name="show_interfaces_config" DisplayName="Show Interfaces (Config Mode)" Tags="" Description="Show the ethernet interfaces in config mode">
+            </Command>
+            <Command Name="show_ntp_server" DisplayName="Show NTP Server" Tags="" Description="Show the NTP server address">
+            </Command>
+            <Command Name="show_timezone" DisplayName="Show Timezone" Tags="" Description="Show the timezone">
+            </Command>
+            <Command Name="show_system_uptime" DisplayName="Show System Uptime" Tags="" Description="Show the system uptime">
+            </Command>
+            <Command Name="show_bgp_routes" DisplayName="Show BGP Routes" Tags="" Description="Show the BGP routes">
+            </Command>
+            <Command Name="show_vlan" DisplayName="Show VLANs" Tags="" Description="Show the existing VLANs">
+                <Parameters>
+                    <Parameter Name="eth_adpt" Type="Lookup" AllowedValues="lo,eth0,eth1,eth2,eth3,eth4,eth5,eth6,eth7,eth8,eth9" Mandatory = "True" DisplayName="Ethernet Adapter" DefaultValue="eth1"
+                               Description="The ethernet adapter to view VLAN info for."/>
+                    <Parameter Name="vlan_id" Type="String" Mandatory = "True" DisplayName="VLAN ID" DefaultValue=""
+                               Description="The ID of the VLAN to view."/>
+                </Parameters>
+            </Command>
+        </Category>
+
+
+        <Category Name="Configuration">
+            <Command Name="enable_verbose_output" DisplayName="Enable Verbose Output" Tags="" Description="Show all terminal response in output">
+            </Command>
+            <Command Name="disable_verbose_output" DisplayName="Disable Verbose Output" Tags="" Description="Show formatted response in output (excludes some show commands)">
+            </Command>
+        </Category>
+
+
+        <Command Name="save" DisplayName="Save" Tags="" Description="Creates a configuration file and saves it to the provided destination">
+            <Parameters>
+                <Parameter Name="configuration_type" Type="Lookup" AllowedValues="Startup,Running" Mandatory = "False"  DefaultValue=""
+                           DisplayName="Configuration Type" Description="Specify whether the file should update the startup or running config. 'Startup' configuration is not supported on all switches."/>
+                <Parameter Name="folder_path" Type="String" Mandatory = "False" DisplayName="Folder Path" DefaultValue=""
+                           Description="The path in which the configuration file will be saved. The path should include the protocol type (for example tftp://asdf)"/>
+                  <Parameter Name="vrf_management_name" Type="String" Mandatory = "False" DisplayName="VRF Management Name" DefaultValue=""
+                           Description="Optional. Virtual routing and Forwarding management name"/>
+            </Parameters>
+        </Command>
+        <Command Name="restore" DisplayName="Restore" Tags="" Description="Restores a configuration file">
+            <Parameters>
+                <Parameter Name="path" Type="String" Mandatory = "True" DefaultValue="" DisplayName="Path"
+                           Description="The path to the configuration file, including the configuration file name. The path should include the protocol type (for example tftp://asdf)."/>
+                <Parameter Name="configuration_type" Type="Lookup" AllowedValues="Startup,Running" Mandatory = "False"  DefaultValue=""
+                           DisplayName="Configuration Type" Description="Specify whether the file should update the startup or running config. 'Startup' configuration is not supported on all switches."/>
+                <Parameter Name="restore_method" Type="Lookup" AllowedValues="Override,Append"  Mandatory = "False" DefaultValue=""
+                           DisplayName="Restore Method" Description="Determines whether the restore should append or override the current configuration."/>
+                <Parameter Name="vrf_management_name" Type="String" Mandatory = "False" DisplayName="VRF Management Name" DefaultValue=""
+                           Description="Optional. Virtual routing and Forwarding management name"/>
+            </Parameters>
+        </Command>
+        <Command Name="load_firmware" DisplayName="Load Firmware" Tags="" Description="Upload and updates firmware on the resource">
+            <Parameters>
+                <Parameter Name="path" Type="String" Mandatory = "True" DisplayName="Path" DefaultValue=""
+                           Description="Path to tftp:// server where firmware file is stored."/>
+                <Parameter Name="vrf_management_name" Type="String" Mandatory = "False" DisplayName="VRF Management Name" DefaultValue=""
+                           Description="Optional. Virtual routing and Forwarding management name"/>
+            </Parameters>
+        </Command>
+    </Layout>
+</Driver>
